@@ -43,7 +43,9 @@ class DataAnalystAgent:
     def describe_data(self) -> str:
         return profile_summary_text(self.profile)
 
-    def ask(self, question: str, chart_dir: str = "/home/claude/ai_data_analyst/charts") -> AgentResponse:
+    def ask(self, question: str, chart_dir: str | None = None) -> AgentResponse:
+        if chart_dir is None:
+            chart_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "charts")
         intent = parse_question(question, self.profile)
 
         try:
@@ -71,7 +73,7 @@ class DataAnalystAgent:
 
 
 if __name__ == "__main__":
-    agent = DataAnalystAgent("/home/claude/ai_data_analyst/sample_sales_data.csv")
+    agent = DataAnalystAgent("sample_sales_data.csv")
     print(agent.describe_data())
     print()
     resp = agent.ask("What were our top 5 products last quarter?")
